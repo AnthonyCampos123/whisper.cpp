@@ -1,7 +1,5 @@
 # M.A.V.I.S - My Average Very Intelligent System
 
-b-eb9f9c39d6fc.mp4
-
 ---
 
 ## XCFramework
