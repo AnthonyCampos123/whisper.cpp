@@ -1,5 +1,5 @@
 # M.A.V.I.S - My Average Very Intelligent System
-A proof of concept of M.A.V.I.S on the IOS platform.
+A proof of concept on the IOS platform.
 
 ---
 
