@@ -5,7 +5,7 @@ Requires installation of XCFramework and generative-ai-swift SDK to run
 
 ---
 
-## Video Walkthrough: Display of Basic Functionality
+## Video Walkthrough: Display of Core Functionality
 
 <img src="mavis-ios.gif" width="347" />
 
