@@ -711,8 +711,6 @@ let package = Package(
 )
 ```
 
-## Examples
-
 There are various examples of using the library for different projects in the [examples](examples) folder.
 Some of the examples are even ported to run in the browser using WebAssembly. Check them out!
 
