@@ -1,11 +1,11 @@
 # M.A.V.I.S - My Average Very Intelligent System
-A proof of concept on the IOS platform. Built with Whisper C++ and Google Gemini. Pipeline: Voice input -> Speech recognition using Whisper -> text transcription -> Call to Google Gemini -> Text output -> Audio output by AVSpeechSynthesizer
+A proof of concept on the IOS platform. Built with Whisper C++ and Google Gemini. Pipeline: Voice input -> Speech recognition using Whisper -> Text transcription -> Call to Google Gemini -> Text output -> Audio output by AVSpeechSynthesizer
 
 Requires installation of XCFramework and generative-ai-swift SDK to run
 
 ---
 
-## Video Walkthrough
+## Video Walkthrough: Display of Basic Functionality
 
 <img src="mavis-ios.gif" width="347" />
 
