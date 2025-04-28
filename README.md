@@ -44,11 +44,4 @@ let package = Package(
 | [generate-karaoke.sh](examples/generate-karaoke.sh) |                                       | Helper script to easily [generate a karaoke video](https://youtu.be/uj7hVta4blM) of raw audio capture                           |
 | [livestream.sh](examples/livestream.sh)             |                                       | [Livestream audio transcription](https://github.com/ggml-org/whisper.cpp/issues/185)                                            |
 | [yt-wsp.sh](examples/yt-wsp.sh)                     |                                       | Download + transcribe and/or translate any VOD [(original)](https://gist.github.com/DaniruKun/96f763ec1a037cc92fe1a059b643b818) |
-| [wchess](examples/wchess)                           | [wchess.wasm](examples/wchess)        | Voice-controlled chess                                                                                                          |
-
-## [Discussions](https://github.com/ggml-org/whisper.cpp/discussions)
-
-If you have any kind of feedback about this project feel free to use the Discussions section and open a new topic.
-You can use the [Show and tell](https://github.com/ggml-org/whisper.cpp/discussions/categories/show-and-tell) category
-to share your own projects that use `whisper.cpp`. If you have a question, make sure to check the
-[Frequently asked questions (#126)](https://github.com/ggml-org/whisper.cpp/discussions/126) discussion.
+| [wchess](examples/wchess)                           | [wchess.wasm](examples/wchess)        | Voice-controlled chess                                                              
