@@ -1,80 +1,131 @@
 import SwiftUI
 import AVFoundation
 import Foundation
+import GoogleGenerativeAI
+
 
 struct ContentView: View {
     @StateObject var whisperState = WhisperState()
-    
+    let modelGenAI = GenerativeModel(name: "gemini-2.0-flash", apiKey: APIKey.default) // gemini api
+    @State var textInput = ""
+    @State var geminiResponse = "Hello! I am M.A.V.I.S, how can I help?"
+    @StateObject private var speechManager = SpeechManager()
+    @State private var isFirstCall = true
+ 
     var body: some View {
         NavigationStack {
+            ZStack{
+                Color.black
+                    .ignoresSafeArea()
             VStack {
                 HStack {
-                    Button("Transcribe", action: {
-                        Task {
-                            await whisperState.transcribeSample()
-                        }
-                    })
-                    .buttonStyle(.bordered)
-                    .disabled(!whisperState.canTranscribe)
-                    
-                    Button(whisperState.isRecording ? "Stop recording" : "Start recording", action: {
+                    Button(whisperState.isRecording ? "Done" : "Ask M.A.V.I.S. (Start Recording)", action: {
                         Task {
                             await whisperState.toggleRecord()
                         }
                     })
-                    .buttonStyle(.bordered)
                     .disabled(!whisperState.canTranscribe)
+                    .foregroundColor(Color(red: 1, green: 1, blue: 1))
+                    .font(.custom("SF Pro Display", size: 12))
+                    .padding(.bottom, 0.0047)
+                    .overlay(
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(Color(red: 0.173, green: 0.255, blue: 1))
+                            .padding(.top, 25)
+                            .edgesIgnoringSafeArea(.bottom)
+                    )
                 }
-                
-                ScrollView {
-                    Text(verbatim: whisperState.messageLog)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                }
-                .font(.footnote)
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
 
+                ScrollView {
+                    Text(geminiResponse) // load gemini response
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.white)
+            
+                    Text(verbatim: whisperState.messageLog) // message log, whisper
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundColor(.white)
+                    
+                    // integrate voice input, send to Gemini
+                    .onChange(of: whisperState.messageLog) { newLog in
+                        // ignore first call (when model is loaded)
+                        guard !newLog.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
+                        if isFirstCall {
+                            isFirstCall = false
+                            } else {
+                            sendLogToGemini(log: newLog)
+                        }
+                    }
+                }
+                .font(.custom("SF Pro Display", size: 14))
+                .padding()
+                .background(Color(red: 0.0747, green: 0.0747, blue: 0.0817))
+                .cornerRadius(10)
+                
                 HStack {
                     Button("Clear Logs", action: {
                         whisperState.messageLog = ""
+                        geminiResponse = ""
                     })
-                    .font(.footnote)
-                    .buttonStyle(.bordered)
-
+                    .foregroundColor(Color(red: 1, green: 1, blue: 1))
+                    .frame(minWidth: 100)
+                    .font(.custom("SF Pro Display", size: 12))
+                    .padding(.bottom, 0.0047)
+                    .overlay(
+                        Rectangle() // Create a rectangle for the bottom border
+                            .frame(height: 2) // Set the height of the border
+                            .foregroundColor(Color(red: 0.173, green: 0.255, blue: 1)) // Set the color to red
+                            .padding(.top, 25) // Ensure it is at the bottom (adjust as needed)
+                            .edgesIgnoringSafeArea(.bottom) // Ignore safe areas if necessary
+                    )
+                    
+                    NavigationLink(destination: ModelsView(whisperState: whisperState)
+                    ) {
+                        Text("View Models")
+                            .frame(minWidth: 100)
+                            .font(.custom("SF Pro Display", size: 12))
+                            .foregroundColor(.white)
+                            .padding(6)
+                    }
+                    .overlay(
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(Color(red: 0.173, green: 0.255, blue: 1))
+                            .padding(.top, 25)
+                            .edgesIgnoringSafeArea(.bottom)
+                    )
+                    
                     Button("Copy Logs", action: {
                         UIPasteboard.general.string = whisperState.messageLog
                     })
-                    .font(.footnote)
-                    .buttonStyle(.bordered)
-
-                    Button("Bench", action: {
-                        Task {
-                            await whisperState.benchCurrentModel()
-                        }
-                    })
-                    .font(.footnote)
-                    .buttonStyle(.bordered)
-                    .disabled(!whisperState.canTranscribe)
-
-                    Button("Bench All", action: {
-                        Task {
-                            await whisperState.bench(models: ModelsView.getDownloadedModels())
-                        }
-                    })
-                    .font(.footnote)
-                    .buttonStyle(.bordered)
-                    .disabled(!whisperState.canTranscribe)
+                    .foregroundColor(Color(red: 1, green: 1, blue: 1))
+                    .frame(minWidth: 100)
+                    .font(.custom("SF Pro Display", size: 12))
+                    .padding(.bottom, 0.0047)
+                    .overlay(
+                        Rectangle()
+                            .frame(height: 2)
+                            .foregroundColor(Color(red: 0.173, green: 0.255, blue: 1))
+                            .padding(.top, 25)
+                            .edgesIgnoringSafeArea(.bottom)
+                    )
                 }
-
-                NavigationLink(destination: ModelsView(whisperState: whisperState)) {
-                    Text("View Models")
-                }
-                .font(.footnote)
-                .padding()
             }
-            .navigationTitle("Whisper SwiftUI Demo")
-            .padding()
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    VStack(spacing: 0){
+                        Text("M.A.V.I.S: My Average Very Intelligent System")
+                            .font(.custom("SF Pro Display", size: 16))
+                            .fontWeight(.heavy)
+                            .foregroundColor(.white)
+                    }
+                    .padding(.vertical, 10)
+                    .multilineTextAlignment(.center)
+                }
+            }
+            .padding(10)
+        }
         }
     }
 
@@ -119,19 +170,16 @@ struct ContentView: View {
         ]
 
         static func getDownloadedModels() -> [Model] {
-            // Filter models that have been downloaded
-            return models.filter {
+            return models.filter { // Filter models that have been downloaded
                 FileManager.default.fileExists(atPath: $0.fileURL.path())
             }
         }
-
         func loadModel(model: Model) {
             Task {
                 dismiss()
                 whisperState.loadModel(path: model.fileURL)
             }
         }
-
         var body: some View {
             List {
                 Section(header: Text("Models")) {
@@ -142,13 +190,56 @@ struct ContentView: View {
                 }
             }
             .listStyle(GroupedListStyle())
-            .navigationBarTitle("Models", displayMode: .inline).toolbar {}
+            .navigationBarTitle("Models", displayMode: .inline)
+            .toolbar{
+            }
+        }
+    }
+    func sendLogToGemini(log: String) { // fetch gemini response
+        geminiResponse = ""
+        Task {
+            do {
+                let response = try await modelGenAI.generateContent(log + "\nAnswer in a witty way. Limit your output to under 100 words.")
+                guard let text = response.text else {
+                    geminiResponse = "Sorry, I didn’t catch that. Please try again."
+                    return
+                }
+                geminiResponse = text
+                speechManager.speak(text)// use tts
+            } catch {
+                print("Error: \(error)")
+                geminiResponse = "Something went wrong. \(error.localizedDescription)"
+            }
+        }
+    }
+
+    // added to fetch response
+    func sendMessage(){
+        geminiResponse = ""
+        Task {
+            do {
+                let response = try await modelGenAI.generateContent(textInput + "Answer in a witty way. Do not use emojis.")
+                
+                guard let text = response.text else {
+                    textInput = "Sorry, I did not catch that. \n Please try again."
+                    return
+                }
+                textInput = ""
+                geminiResponse = text
+                speechManager.speak(text)
+                } catch{
+                    print("Full error: \(error)")
+                    geminiResponse = "Something went wrong. \n\(error.localizedDescription)"
+            }
+        }
+    }
+    class SpeechManager: ObservableObject { // tts
+        let synthesizer = AVSpeechSynthesizer()
+        func speak(_ text: String) {
+            let utterance = AVSpeechUtterance(string: text)
+            utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+            utterance.rate = 0.5
+            synthesizer.speak(utterance)
         }
     }
 }
-
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}

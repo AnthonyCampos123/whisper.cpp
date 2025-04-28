@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!--
-   GenerativeAI-Info.plist
-   whisper.swiftui
-
-   Created by Anthony Campos on 4/14/25.
-   Copyright (c) 2025 ___ORGANIZATIONNAME___. All rights reserved.
--->
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDar-H6H6IT7DYcm5SXVSZbP6E6Bl_oBi0</string>
+</dict>
 </plist>
