@@ -7,7 +7,7 @@ Requires installation of XCFramework and generative-ai-swift SDK to run
 
 ## Video Walkthrough
 
-<img src="mavis-ios.gif" width="200" />
+<img src="mavis-ios.gif" width="347" />
 
 ## XCFramework
 The XCFramework is a precompiled version of the library for iOS, visionOS, tvOS,
