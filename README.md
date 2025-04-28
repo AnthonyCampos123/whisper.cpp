@@ -5,7 +5,7 @@ A proof of concept on the IOS platform.
 
 ## Video Walkthrough
 
-![Video Walkthrough](mavis_ios_demo.gif)
+![Video Walkthrough](mavis-ios.gif)
 
 ## XCFramework
 The XCFramework is a precompiled version of the library for iOS, visionOS, tvOS,
