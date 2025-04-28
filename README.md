@@ -1,4 +1,4 @@
-# whisper.cpp
+# whisper.cpps
 
 ![whisper.cpp](https://user-images.githubusercontent.com/1991296/235238348-05d0f6a4-da44-4900-a1de-d0707e75b763.jpeg)
 
