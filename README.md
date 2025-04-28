@@ -3,6 +3,10 @@ A proof of concept on the IOS platform.
 
 ---
 
+## Video Walkthrough
+
+![Video Walkthrough](mavis_ios_demo.gif)
+
 ## XCFramework
 The XCFramework is a precompiled version of the library for iOS, visionOS, tvOS,
 and macOS. It can be used in Swift projects without the need to compile the
